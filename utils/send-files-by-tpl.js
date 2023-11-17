@@ -5,7 +5,7 @@ import getFileType from './get-file-type.js';
 
 export default sendFilesByTpl;
 
-function sendFilesByTpl({chatId, currentPath, text, currentDirFiles}) {
+async function sendFilesByTpl({chatId, currentPath, text, currentDirFiles}) {
   let reString = text
     .replace(/\.|\^|\$|\+|\-|\?|\(|\)|\[|\]|\{|\}|\\|\|/g, '\\$&')
     .replace('*', '.*');
@@ -43,7 +43,7 @@ function sendFilesByTpl({chatId, currentPath, text, currentDirFiles}) {
   for (let items of fileTypes.values()) {
     for (let i = 0; i < items.length; i += 10) {
       const media = items.slice(i, i + 10);
-      bot.sendFile({
+      await bot.sendFile({
         chat_id: chatId,
         media: media
       });

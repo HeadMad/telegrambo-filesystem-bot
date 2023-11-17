@@ -1,11 +1,12 @@
 {
   "name": "telegrambo-filesystem-bot",
   "version": "0.0.1",
-  "description": "Description for telegrambo extension",
+  "description": "Telegrambo Filesystem Bot",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "nodemon --env-file .env ./test.js"
+    "bot": "node --env-file .env ./index.js",
+    "dev": "nodemon --env-file .env ./test.js"
   },
   "keywords": [
     "telegrambo",

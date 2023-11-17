@@ -42,9 +42,14 @@ bot.on('message', async (event) => {
 
   name = currentDirFiles.find(file => file.toLowerCase() === text.toLowerCase());
 
-  if (!name && text.startsWith('..')) {
-    name = text;
-  }
+  if (!name
+    && text === '.'
+    || text === '..'
+    || text.startsWith('./')
+    || text.startsWith('../')
+    || text.startsWith('/')
+  ) name = text;
+
 
   const filePath = path.join(currentPath, name);
   const stat = fs.statSync(filePath);
@@ -67,8 +72,8 @@ bot.on('message', async (event) => {
   }
 
   return event.sendMessage({
-        text: 'File not found'
-      });
+    text: 'File not found'
+  });
 });
 
 bot.polling();
