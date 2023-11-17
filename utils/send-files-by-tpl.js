@@ -40,12 +40,29 @@ async function sendFilesByTpl({chatId, currentPath, text, currentDirFiles}) {
   if (!fileTypes.size === 0)
     return;
 
-  for (let items of fileTypes.values()) {
+  for (let [type, items] of fileTypes) {
     for (let i = 0; i < items.length; i += 10) {
+      
+      const timer = setInterval(() => {
+        bot.sendChatAction({
+          chat_id: chatId,
+          action: 'upload_' + type
+        });
+      }, 4000);
+      
       const media = items.slice(i, i + 10);
       await bot.sendFile({
         chat_id: chatId,
         media: media
+      }).then(() => {
+        clearInterval(timer);
+
+      }).catch(err => {
+        clearInterval(timer);
+        bot.sendMessage({
+          chat_id: chatId,
+          text: 'Upload Error: ' + err.message
+        })
       });
     }
   }

@@ -1,20 +1,14 @@
-import telegrambo from "telegrambo";
-import extensionName from "./index.js";
+import bot from './bot.js';
 
-const bot = telegrambo(process.env.BOT_TOKEN);
-bot.extensionName = extensionName;
 
-bot.extensionName('First Argument', {
-  secondArgument: 'Second Argument'
-});
+const timer = setInterval(() => {
+  bot.sendChatAction({
+    chat_id: process.env.CHAT_ID,
+    action: 'typing'
+  });
+}, 4000);
 
-(async () => {
-  const {ok, result} = await bot.getUpdates();
-
-  if (ok) 
-    for (const update of result) {
-      bot.setUpdate(update);
-    }
-
-})();
+setTimeout(() => {
+  clearInterval(timer);
+}, 20000);
 

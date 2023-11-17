@@ -3,7 +3,7 @@ import path  from "path";
 export default getFileType;
 
 function getFileType(filePath) {
-  const ext = path.extname(filePath);
+  const ext = path.extname(filePath).toLowerCase();
   
   const exts = {
     '.png': 'photo',
