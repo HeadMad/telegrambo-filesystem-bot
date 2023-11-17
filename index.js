@@ -38,42 +38,50 @@ bot.on('message', async (event) => {
       currentDirFiles
     });
 
-  let name;
+  try {
 
-  name = currentDirFiles.find(file => file.toLowerCase() === text.toLowerCase());
+    let name;
+    name = currentDirFiles.find(file => file.toLowerCase() === text.toLowerCase());
 
-  if (!name
-    && text === '.'
-    || text === '..'
-    || text.startsWith('./')
-    || text.startsWith('../')
-    || text.startsWith('/')
-  ) name = text;
+    if (!name
+      && text === '.'
+      || text === '..'
+      || text.startsWith('./')
+      || text.startsWith('../')
+      || text.startsWith('/')
+    ) name = text;
 
 
-  const filePath = path.join(currentPath, name);
-  const stat = fs.statSync(filePath);
+    const filePath = path.join(currentPath, name);
+    const stat = fs.statSync(filePath);
 
-  if (stat.isDirectory()) {
-    currentPath = filePath;
-    currentDirFiles = fs.readdirSync(filePath);
+    if (stat.isDirectory()) {
+      currentPath = filePath;
+      currentDirFiles = fs.readdirSync(filePath);
+      return event.sendMessage({
+        text: getList(currentPath, currentDirFiles),
+        parse_mode: 'HTML'
+      });
+    }
+
+    if (stat.isFile()) {
+      const type = getFileType(filePath);
+      return bot.sendFile({
+        chat_id: event.message.chat.id,
+        [type]: filePath
+      });
+    }
+
     return event.sendMessage({
-      text: getList(currentPath, currentDirFiles),
-      parse_mode: 'HTML'
+      text: 'File not found'
+    });
+
+  } catch (err) {
+
+    event.sendMessage({
+      text: `Error: ${err.message}`
     });
   }
-
-  if (stat.isFile()) {
-    const type = getFileType(filePath);
-    return bot.sendFile({
-      chat_id: event.message.chat.id,
-      [type]: filePath
-    });
-  }
-
-  return event.sendMessage({
-    text: 'File not found'
-  });
 });
 
 bot.polling();
